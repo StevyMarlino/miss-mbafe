@@ -13,8 +13,8 @@ class VoteFactory extends Factory
      */
     public function definition()
     {
-        return [
-            //
+        return[
+
         ];
     }
 }

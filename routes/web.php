@@ -13,6 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('mbafe.index');
-});
+Route::get('/', [\App\Http\Controllers\VoteController::class,'index']);
+Route::post('/vote', [\App\Http\Controllers\VoteController::class,'update'])->name('update.vote');

@@ -14,7 +14,7 @@
     <!-- mobile specific metas
     ================================================== -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS
 
     <!-- Google Font -->
@@ -72,7 +72,12 @@
 
     <style type="text/css">
         body {
-            background: url({{ asset('images/theater-1713816.jpg') }}) repeat center center;
+            background-color: black;
+        {{--background: url({{ asset('images/fond.jpg') }}) repeat center center;--}}
+
+
+
+
         }
 
         .header-section {
@@ -458,7 +463,7 @@
                 <br>
                 <h4 style="color: white;">
                     Ou contacter ce numéro:
-                    <i style="font-weight: bold;color: #65024b;">237656372666</i>
+                    <i style="font-weight: bold;color: #65024b;">+237 6 59 06 03 28</i>
                 </h4>
 
             </div>
@@ -467,18 +472,18 @@
     </div>
 </div>
 
-<section class="hero-wrap d-flex js-fullheight" data-aos="fade-right" style="padding: 0px;">
-    <div class="overlay"></div>
-    <div class="forth js-fullheight d-flex align-items-center"
-         style="background-image: url({{ asset('images/bg1.jpg') }});">
+<section class="hero-wrap d-flex js-fullheight" data-aos="fade-right"
+         style="padding:0;background-image: url({{ asset('images/bg1.jpg') }});">
+    {{--    <div class="overlay"></div>--}}
+    <div class="forth js-fullheight d-flex align-items-center">
         <div class="text text-center">
             <h1>Miss Mbafe Premiere Edition 2021</h1>
-            <h2 class="mb-5">Vote pour votre candidat favoris</h2>
+            <h2 class="mb-5">Vote pour votre candidates favorites</h2>
             <p><a href="#candidatesection" class="btn_3">Vote maintenant</a></p>
         </div>
     </div>
-    <div class="third about-img js-fullheight" style="background-image: url({{ asset('images/bg1.jpg') }});">
-    </div>
+    {{--    <div class="third about-img js-fullheight" style="background-image: url({{ asset('images/bg1.jpg') }});">--}}
+    {{--    </div>--}}
 </section>
 
 <section class="ftco-section ftco-no-pt" style="margin-top: 10px;" id="candidatesection">
@@ -487,43 +492,173 @@
 
         <div class="row">
 
-            <div class="col-xs-12 col-sm-6 col-md-4" style="padding: 10px;" data-aos="fade-up">
-                <a href="profile/nkuimi-loveline.html">
+            @foreach($candidates as $candidate)
+                <div class="col-xs-12 col-sm-6 col-md-4" style="padding: 10px;" data-aos="fade-up">
+
           	   <span class="font-bold" style="float: right;z-index: 10001; position: absolute;top: 10px;right: 10px;font-weight:bold;
-          	   background-color: #e82294; border: 1px solid #e82294;padding: 10px;color: white;border-top-right-radius: 16px;">4935 Votes </span>
+          	   background-color: #e82294; border: 1px solid #e82294;padding: 10px;color: white;border-top-right-radius: 16px;">{{ $candidate->total_vote }} Vote{{ $candidate->total_vote > 1 ? 's' : '' }} </span>
                     <figure>
 
                         <div class="model img d-flex align-items-end"
-                             style="background-image: url(images/2020/candidates/finaliste19.png);">
+                             style="background-image: url( 'images/candidates/finaliste{{$candidate->number_candidates}}.jpeg' );">
                             <div class="desc w-100 px-4">
                                 <div class="info w-100 mb-4">
 
                                 </div>
                                 <div class="text w-100 mb-3 s_product_text">
                                     <h2>
-                                        <button type="button" class="meta" onclick="showamountpage(104);return false;">
-                                            NKUIMI<br> LOVELINE
+                                        <form method="POST" action="{{ route('update.vote') }}">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{$candidate->id}}"/>
+                                            @if(!in_array(request()->ip(),$ip_votes,true))
+                                                <button id="vote1" type="submit" class="meta">
+                                                    {{ $candidate->name }}
 
-                                            <div style="margin-left:0px;color: #f5dc22;font-family: cursive;"> Miss
-                                                Ouest
-                                                <span style="margin-left: 10px;"> No 19</span>
-                                            </div>
-                                            <div class="btn_3"> voter pour elle</div>
-                                        </button>
+                                                    <div style="margin-left:0px;color: #f5dc22;font-family: cursive;">
+                                                        Candidates
+                                                        <span
+                                                            style="margin-left: 10px;"> No {{ $candidate->number_candidates }}</span>
+                                                    </div>
+                                                    <div class="btn_3"> voter pour elle</div>
+                                                </button>
+                                        </form>
+                                        @else
+                                            <button class="meta" onclick="showamountpage(104);return false;">
+                                                Merci pour votre vote
+                                            </button>
+                                        @endif
+
                                     </h2>
                                 </div>
                             </div>
                         </div>
                     </figure>
-                </a>
-            </div>
-            <!---->
+
+                </div>
+            @endforeach
+        <!---->
+            {{--            <div class="col-xs-12 col-sm-6 col-md-4" style="padding: 10px;" data-aos="fade-up">--}}
+
+            {{--          	   <span class="font-bold" style="float: right;z-index: 10001; position: absolute;top: 10px;right: 10px;font-weight:bold;--}}
+            {{--          	   background-color: #e82294; border: 1px solid #e82294;padding: 10px;color: white;border-top-right-radius: 16px;">0 Votes </span>--}}
+            {{--                <figure>--}}
+
+            {{--                    <div class="model img d-flex align-items-end"--}}
+            {{--                         style="background-image: url({{ asset('images/candidates/finaliste2.jpeg') }});">--}}
+            {{--                        <div class="desc w-100 px-4">--}}
+            {{--                            <div class="info w-100 mb-4">--}}
+
+            {{--                            </div>--}}
+            {{--                            <div class="text w-100 mb-3 s_product_text">--}}
+            {{--                                <h2>--}}
+            {{--                                    <button type="button" class="meta" onclick="showamountpage(104);return false;">--}}
+            {{--                                        Sandji Frédérique--}}
+
+            {{--                                        <div style="margin-left:0px;color: #f5dc22;font-family: cursive;"> Candidates--}}
+            {{--                                            <span style="margin-left: 10px;"> No 2</span>--}}
+            {{--                                        </div>--}}
+            {{--                                        <div class="btn_3"> voter pour elle</div>--}}
+            {{--                                    </button>--}}
+            {{--                                </h2>--}}
+            {{--                            </div>--}}
+            {{--                        </div>--}}
+            {{--                    </div>--}}
+            {{--                </figure>--}}
+            {{--            </div>--}}
+            {{--            <!---->--}}
+            {{--            <div class="col-xs-12 col-sm-6 col-md-4" style="padding: 10px;" data-aos="fade-up">--}}
+
+            {{--          	   <span class="font-bold" style="float: right;z-index: 10001; position: absolute;top: 10px;right: 10px;font-weight:bold;--}}
+            {{--          	   background-color: #e82294; border: 1px solid #e82294;padding: 10px;color: white;border-top-right-radius: 16px;">0 Votes </span>--}}
+            {{--                <figure>--}}
+
+            {{--                    <div class="model img d-flex align-items-end"--}}
+            {{--                         style="background-image: url({{ asset('images/candidates/finaliste4.jpeg') }});">--}}
+            {{--                        <div class="desc w-100 px-4">--}}
+            {{--                            <div class="info w-100 mb-4">--}}
+
+            {{--                            </div>--}}
+            {{--                            <div class="text w-100 mb-3 s_product_text">--}}
+            {{--                                <h2>--}}
+            {{--                                    <button type="button" class="meta" onclick="showamountpage(104);return false;">--}}
+            {{--                                        Angue Läetitia--}}
+
+            {{--                                        <div style="margin-left:0px;color: #f5dc22;font-family: cursive;"> Candidates--}}
+            {{--                                            <span style="margin-left: 10px;"> No 4</span>--}}
+            {{--                                        </div>--}}
+            {{--                                        <div class="btn_3"> voter pour elle</div>--}}
+            {{--                                    </button>--}}
+            {{--                                </h2>--}}
+            {{--                            </div>--}}
+            {{--                        </div>--}}
+            {{--                    </div>--}}
+            {{--                </figure>--}}
+            {{--            </div>--}}
+            {{--            <!---->--}}
+            {{--            <div class="col-xs-12 col-sm-6 col-md-4" style="padding: 10px;" data-aos="fade-up">--}}
+
+            {{--          	   <span class="font-bold" style="float: right;z-index: 10001; position: absolute;top: 10px;right: 10px;font-weight:bold;--}}
+            {{--          	   background-color: #e82294; border: 1px solid #e82294;padding: 10px;color: white;border-top-right-radius: 16px;">0 Votes </span>--}}
+            {{--                <figure>--}}
+
+            {{--                    <div class="model img d-flex align-items-end"--}}
+            {{--                         style="background-image: url({{ asset('images/candidates/finaliste5.jpeg') }});">--}}
+            {{--                        <div class="desc w-100 px-4">--}}
+            {{--                            <div class="info w-100 mb-4">--}}
+
+            {{--                            </div>--}}
+            {{--                            <div class="text w-100 mb-3 s_product_text">--}}
+            {{--                                <h2>--}}
+            {{--                                    <button type="button" class="meta" onclick="showamountpage(104);return false;">--}}
+            {{--                                        Rosy Ndzengue--}}
+
+            {{--                                        <div style="margin-left:0px;color: #f5dc22;font-family: cursive;"> Candidates--}}
+            {{--                                            <span style="margin-left: 10px;"> No 5</span>--}}
+            {{--                                        </div>--}}
+            {{--                                        <div class="btn_3"> voter pour elle</div>--}}
+            {{--                                    </button>--}}
+            {{--                                </h2>--}}
+            {{--                            </div>--}}
+            {{--                        </div>--}}
+            {{--                    </div>--}}
+            {{--                </figure>--}}
+            {{--                </a>--}}
+            {{--            </div>--}}
+            {{--            <!---->--}}
+            {{--            <div class="col-xs-12 col-sm-6 col-md-4" style="padding: 10px;" data-aos="fade-up">--}}
+            {{--          	   <span class="font-bold" style="float: right;z-index: 10001; position: absolute;top: 10px;right: 10px;font-weight:bold;--}}
+            {{--          	   background-color: #e82294; border: 1px solid #e82294;padding: 10px;color: white;border-top-right-radius: 16px;">0 Votes </span>--}}
+            {{--                <figure>--}}
+
+            {{--                    <div class="model img d-flex align-items-end"--}}
+            {{--                         style="background-image: url({{ asset('images/candidates/finaliste6.jpeg') }});">--}}
+            {{--                        <div class="desc w-100 px-4">--}}
+            {{--                            <div class="info w-100 mb-4">--}}
+
+            {{--                            </div>--}}
+            {{--                            <div class="text w-100 mb-3 s_product_text">--}}
+            {{--                                <h2>--}}
+            {{--                                    <button type="button" class="meta" onclick="showamountpage(104);return false;">--}}
+            {{--                                        Sandji Mercedes--}}
+
+            {{--                                        <div style="margin-left:0px;color: #f5dc22;font-family: cursive;"> Candidates--}}
+            {{--                                            <span style="margin-left: 10px;"> No 6</span>--}}
+            {{--                                        </div>--}}
+            {{--                                        <div class="btn_3"> voter pour elle</div>--}}
+            {{--                                    </button>--}}
+            {{--                                </h2>--}}
+            {{--                            </div>--}}
+            {{--                        </div>--}}
+            {{--                    </div>--}}
+            {{--                </figure>--}}
+            {{--                </a>--}}
+            {{--            </div>--}}
+            {{--            <!---->--}}
 
         </div>
 
 
         <div class="row">
-
 
         </div>
 
@@ -567,9 +702,9 @@
                     <div class="block-23 mb-3">
                         <ul>
                             <li><a href="#"><span class="icon icon-phone"></span><span
-                                        class="text">+237 </span></a></li>
+                                        class="text">+237 6 59 06 03 28</span></a></li>
                             <li><a href="#"><span class="icon icon-envelope"></span><span
-                                        class="text">missmbafe.com</span></a>
+                                        class="text">contact@missmbafe.com</span></a>
                             </li>
                         </ul>
                     </div>
@@ -638,7 +773,8 @@
     }
 
     function disablebt(id) {
-        document.getElementById('#=vote_' + id).disabled = true;
+        // document.getElementById('#vote' + id).disabled = true;
+        $("#vote" + id).attr("disabled", "true")
     }
 
     function selectdevise(val, id) {

@@ -5,60 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Vote;
 use App\Http\Requests\StoreVoteRequest;
 use App\Http\Requests\UpdateVoteRequest;
+use App\Models\VoteIp;
 
 class VoteController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreVoteRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreVoteRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Vote  $vote
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Vote $vote)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Vote  $vote
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Vote $vote)
-    {
-        //
+        $ip = [];
+        foreach(VoteIp::all() as $voteIp)
+        {
+            $ip[] = $voteIp->ip;
+        }
+        $datas = [
+            'candidates' => Vote::all(),
+            'ip_votes' => $ip
+        ];
+        return view('mbafe.index',$datas);
     }
 
     /**
@@ -66,21 +33,19 @@ class VoteController extends Controller
      *
      * @param  \App\Http\Requests\UpdateVoteRequest  $request
      * @param  \App\Models\Vote  $vote
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateVoteRequest $request, Vote $vote)
+    public function update(UpdateVoteRequest $request)
     {
-        //
+        $candidate = Vote::find($request->id);
+        $candidate->total_vote ++;
+        $candidate->save();
+
+         VoteIp::create([
+            'ip' => request()->ip()
+        ]);
+
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Vote  $vote
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Vote $vote)
-    {
-        //
-    }
 }

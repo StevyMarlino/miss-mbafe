@@ -13,7 +13,7 @@ class StoreVoteRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class StoreVoteRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'total_vote' => 'required | max:1|min:1'
         ];
     }
 }
